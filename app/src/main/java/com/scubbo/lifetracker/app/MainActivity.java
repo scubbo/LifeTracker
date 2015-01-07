@@ -1,5 +1,9 @@
 package com.scubbo.lifetracker.app;
 
+import android.app.Activity;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBar;
 import android.support.v4.app.Fragment;
@@ -7,13 +11,14 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.os.Build;
+import android.widget.TextView;
 
+import java.util.List;
 
-
-public class MainActivity extends ActionBarActivity {
+public class MainActivity extends ActionBarActivity implements View.OnTouchListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +54,48 @@ public class MainActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public boolean onTouch(View view, MotionEvent motionEvent) {
+        if (view.getId() == R.id.textView2) {
+//            FragmentManager fm = getSupportFragmentManager();
+//            FragmentManager.BackStackEntry entry = fm.getBackStackEntryAt(fm.getBackStackEntryCount() - 1);
+//            Fragment destination = fm.getFragments().get(entry.getId());
+//            System.out.println(destination);
+//
+//            FragmentTransaction ft = fm.beginTransaction();
+//            System.out.println("begun transaction");
+//
+//            ft.setCustomAnimations(R.animator.slide_in_left, R.animator.slide_out_right);
+//            System.out.println("customer animations set");
+//            ft.replace(R.layout.fragment_main, destination, destination.getClass().getSimpleName());
+//            ft.commit();
+//            System.out.println("replacement done");
+
+            //http://stackoverflow.com/questions/4932462/animate-the-transition-between-fragments
+            //http://trickyandroid.com/fragments-translate-animation/
+            String TAG = "Add-question-tag";
+            FragmentManager fm = getSupportFragmentManager();
+            Fragment originalFragment = fm.findFragmentById(R.layout.fragment_main);
+            Fragment f = fm.findFragmentByTag(TAG);
+            if (f != null) {
+                fm.popBackStack();
+            } else {
+                fm.beginTransaction()
+                        .setCustomAnimations(R.animator.slide_in_right,
+                                R.animator.slide_out_right,
+                                R.animator.slide_in_right,
+                                R.animator.slide_out_right)
+                        .add(R.id.container, Fragment
+                                        .instantiate(this, AddQuestionFragment.class.getName()),
+                                TAG)
+                        .addToBackStack(null).commit();
+            }
+
+        }
+        return false;
+    }
+
+
     /**
      * A placeholder fragment containing a simple view.
      */
@@ -61,6 +108,26 @@ public class MainActivity extends ActionBarActivity {
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                 Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_main, container, false);
+
+            TextView v = (TextView) rootView.findViewById(R.id.textView2);
+            TextView v1 = (TextView) rootView.findViewById(R.id.textView3);
+
+            View.OnTouchListener activityAsListener = (View.OnTouchListener) getActivity();
+            v.setOnTouchListener(activityAsListener);
+            v1.setOnTouchListener(activityAsListener);
+
+            return rootView;
+        }
+    }
+
+    public static class AddQuestionFragment extends Fragment {
+        public AddQuestionFragment() {}
+
+        @Override
+        public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                Bundle savedInstanceState) {
+            View rootView = inflater.inflate(R.layout.fragment_add_question, container, false);
+
             return rootView;
         }
     }
