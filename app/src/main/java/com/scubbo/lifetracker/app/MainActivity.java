@@ -1,11 +1,7 @@
 package com.scubbo.lifetracker.app;
 
-import android.app.Activity;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.ActionBarActivity;
-import android.support.v7.app.ActionBar;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -16,17 +12,19 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import java.util.List;
-
 public class MainActivity extends ActionBarActivity implements View.OnTouchListener {
+
+    private static final String MAIN_FRAGMENT_TAG = "main-fragment-tag";
+    private static final String ADD_QUESTION_TAG = "add-question-tag";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         if (savedInstanceState == null) {
+            PlaceholderFragment fg = new PlaceholderFragment();
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.container, new PlaceholderFragment())
+                    .add(R.id.container, fg, MAIN_FRAGMENT_TAG)
                     .commit();
         }
     }
@@ -57,39 +55,19 @@ public class MainActivity extends ActionBarActivity implements View.OnTouchListe
     @Override
     public boolean onTouch(View view, MotionEvent motionEvent) {
         if (view.getId() == R.id.textView2) {
-//            FragmentManager fm = getSupportFragmentManager();
-//            FragmentManager.BackStackEntry entry = fm.getBackStackEntryAt(fm.getBackStackEntryCount() - 1);
-//            Fragment destination = fm.getFragments().get(entry.getId());
-//            System.out.println(destination);
-//
-//            FragmentTransaction ft = fm.beginTransaction();
-//            System.out.println("begun transaction");
-//
-//            ft.setCustomAnimations(R.animator.slide_in_left, R.animator.slide_out_right);
-//            System.out.println("customer animations set");
-//            ft.replace(R.layout.fragment_main, destination, destination.getClass().getSimpleName());
-//            ft.commit();
-//            System.out.println("replacement done");
-
             //http://stackoverflow.com/questions/4932462/animate-the-transition-between-fragments
             //http://trickyandroid.com/fragments-translate-animation/
-            String TAG = "Add-question-tag";
             FragmentManager fm = getSupportFragmentManager();
-            Fragment originalFragment = fm.findFragmentById(R.layout.fragment_main);
-            Fragment f = fm.findFragmentByTag(TAG);
-            if (f != null) {
-                fm.popBackStack();
-            } else {
-                fm.beginTransaction()
-                        .setCustomAnimations(R.animator.slide_in_right,
-                                R.animator.slide_out_right,
-                                R.animator.slide_in_right,
-                                R.animator.slide_out_right)
-                        .add(R.id.container, Fragment
+            Fragment originalFragment = fm.findFragmentByTag(MAIN_FRAGMENT_TAG);
+            fm.beginTransaction()
+                    .setCustomAnimations(R.animator.slide_in_right,
+                            R.animator.slide_out_left,
+                            R.animator.slide_in_left,
+                            R.animator.slide_out_right)
+                        .replace(originalFragment.getId(), Fragment
                                         .instantiate(this, AddQuestionFragment.class.getName()),
-                                TAG)
-                        .addToBackStack(null).commit();
-            }
+                                ADD_QUESTION_TAG)
+                    .addToBackStack(null).commit();
 
         }
         return false;
