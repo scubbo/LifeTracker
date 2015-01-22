@@ -11,20 +11,23 @@
     <LinearLayout
             android:orientation="vertical"
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:layout_alignParentLeft="true" android:layout_alignParentStart="true">
+            android:layout_height="fill_parent">
         <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                android:text="@string/question_type_percentage"
-                android:id="@+id/textViewPercentage"/>
-        <TextView
+                android:text="@string/add_question_detail_title"
+                android:id="@+id/textView4" android:layout_gravity="center_horizontal"/>
+        <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/editText" android:layout_gravity="center_horizontal"/>
+        <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                android:text="@string/question_type_boolean"
-                android:id="@+id/textViewBoolean"/>
+                android:text="@string/save"
+                android:id="@+id/button" android:layout_alignTop="@+id/linearLayout"
+                android:layout_alignRight="@+id/linearLayout" android:layout_alignEnd="@+id/linearLayout"
+                android:layout_marginRight="239dp" android:layout_marginEnd="239dp" android:layout_marginTop="57dp"/>
     </LinearLayout>
 
 </RelativeLayout>

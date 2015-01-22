@@ -10,19 +10,22 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 
 public class MainActivity extends ActionBarActivity implements View.OnTouchListener {
 
     private static final String MAIN_FRAGMENT_TAG = "main-fragment-tag";
     private static final String ADD_QUESTION_TAG = "add-question-tag";
+    private static final String ADD_QUESTION_DETAIL_TAG = "add-question-detail-tag";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         if (savedInstanceState == null) {
-            PlaceholderFragment fg = new PlaceholderFragment();
+            MainFragment fg = new MainFragment();
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.container, fg, MAIN_FRAGMENT_TAG)
                     .commit();
@@ -54,10 +57,11 @@ public class MainActivity extends ActionBarActivity implements View.OnTouchListe
 
     @Override
     public boolean onTouch(View view, MotionEvent motionEvent) {
+        FragmentManager fm = getSupportFragmentManager();
+
         if (view.getId() == R.id.textView2) {
             //http://stackoverflow.com/questions/4932462/animate-the-transition-between-fragments
             //http://trickyandroid.com/fragments-translate-animation/
-            FragmentManager fm = getSupportFragmentManager();
             Fragment originalFragment = fm.findFragmentByTag(MAIN_FRAGMENT_TAG);
             fm.beginTransaction()
                     .setCustomAnimations(R.animator.slide_in_right,
@@ -70,16 +74,25 @@ public class MainActivity extends ActionBarActivity implements View.OnTouchListe
                     .addToBackStack(null).commit();
 
         }
+        if (view.getId() == R.id.textViewBoolean) {
+            Fragment originalFragment = fm.findFragmentByTag(ADD_QUESTION_TAG);
+            fm.beginTransaction()
+                    .setCustomAnimations(R.animator.slide_in_right,
+                            R.animator.slide_out_left,
+                            R.animator.slide_in_left,
+                            R.animator.slide_out_right)
+                    .replace(originalFragment.getId(), Fragment
+                                    .instantiate(this, AddQuestionDetailFragment.class.getName()),
+                            ADD_QUESTION_DETAIL_TAG)
+                    .addToBackStack(null).commit();
+        }
         return false;
     }
 
 
-    /**
-     * A placeholder fragment containing a simple view.
-     */
-    public static class PlaceholderFragment extends Fragment {
+    public static class MainFragment extends Fragment {
 
-        public PlaceholderFragment() {
+        public MainFragment() {
         }
 
         @Override
@@ -106,7 +119,38 @@ public class MainActivity extends ActionBarActivity implements View.OnTouchListe
                 Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_add_question, container, false);
 
+            TextView v = (TextView) rootView.findViewById(R.id.textViewBoolean);
+
+            View.OnTouchListener activityAsListener = (View.OnTouchListener) getActivity();
+            v.setOnTouchListener(activityAsListener);
+
             return rootView;
+        }
+    }
+
+    public static class AddQuestionDetailFragment extends Fragment {
+        //TODO: Make this configurable
+        public AddQuestionDetailFragment() {}
+
+        @Override
+        public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                 Bundle savedInstanceState) {
+            View rootView = inflater.inflate(R.layout.fragment_add_question_detail, container, false);
+
+            Button button = (Button) rootView.findViewById(R.id.button);
+            button.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    EditText questionText = (EditText) ((View)view.getParent()).findViewById(R.id.editText);
+                    String questionTextValue = questionText.getText().toString();
+                    addQuestion(questionTextValue);
+                }
+            });
+            return rootView;
+        }
+
+        private void addQuestion(String questionText) {
+            System.out.println("DEBUG - we would add question with text " + questionText + " but I haven't done that yet");
         }
     }
 }

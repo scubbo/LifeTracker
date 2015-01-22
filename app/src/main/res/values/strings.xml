@@ -8,5 +8,7 @@
     <string name="view_questions_title">View Questions</string>
     <string name="question_type_percentage">Percentage</string>
     <string name="question_type_boolean">Yes/No</string>
+    <string name="add_question_detail_title">What should the question be?</string>
+    <string name="save">Save</string>
 
 </resources>
