@@ -12,13 +12,20 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+import com.scubbo.lifetracker.app.questions.QuestionType;
+
+import java.util.List;
 
 public class MainActivity extends ActionBarActivity implements View.OnTouchListener {
 
     private static final String MAIN_FRAGMENT_TAG = "main-fragment-tag";
     private static final String ADD_QUESTION_TAG = "add-question-tag";
     private static final String ADD_QUESTION_DETAIL_TAG = "add-question-detail-tag";
+    private static final String VIEW_QUESTIONS_TAG = "view-questions-tag";
+
+    private static DatabaseHelper dbHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,6 +37,8 @@ public class MainActivity extends ActionBarActivity implements View.OnTouchListe
                     .add(R.id.container, fg, MAIN_FRAGMENT_TAG)
                     .commit();
         }
+
+        dbHelper = new DatabaseHelper(this);
     }
 
 
@@ -73,6 +82,18 @@ public class MainActivity extends ActionBarActivity implements View.OnTouchListe
                                 ADD_QUESTION_TAG)
                     .addToBackStack(null).commit();
 
+        }
+        if (view.getId() == R.id.textView3) {
+            Fragment originalFragment = fm.findFragmentByTag(MAIN_FRAGMENT_TAG);
+            fm.beginTransaction()
+                    .setCustomAnimations(R.animator.slide_in_right,
+                            R.animator.slide_out_left,
+                            R.animator.slide_in_left,
+                            R.animator.slide_out_right)
+                    .replace(originalFragment.getId(), Fragment
+                                        .instantiate(this, ViewQuestionsFragment.class.getName()),
+                                VIEW_QUESTIONS_TAG)
+                    .addToBackStack(null).commit();
         }
         if (view.getId() == R.id.textViewBoolean) {
             Fragment originalFragment = fm.findFragmentByTag(ADD_QUESTION_TAG);
@@ -144,13 +165,32 @@ public class MainActivity extends ActionBarActivity implements View.OnTouchListe
                     EditText questionText = (EditText) ((View)view.getParent()).findViewById(R.id.editText);
                     String questionTextValue = questionText.getText().toString();
                     addQuestion(questionTextValue);
+                    questionText.setText("");
                 }
             });
             return rootView;
         }
 
         private void addQuestion(String questionText) {
-            System.out.println("DEBUG - we would add question with text " + questionText + " but I haven't done that yet");
+            dbHelper.addQuestion(QuestionType.BOOLEAN, questionText);
+        }
+    }
+
+    public static class ViewQuestionsFragment extends Fragment {
+        @Override
+        public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                                 Bundle savedInstanceState) {
+            System.out.println("onCreateView for ViewQuestions is being called");
+            View rootView = inflater.inflate(R.layout.fragment_view_questions, container, false);
+
+            LinearLayout layout = (LinearLayout) rootView.findViewById(R.id.linearLayout1);
+            List<String> questionTexts = dbHelper.getQuestionTexts();
+            for (String questionText: questionTexts) {
+                TextView tv = new TextView(getActivity());
+                tv.setText(questionText);
+                layout.addView(tv);
+            }
+            return rootView;
         }
     }
 }
