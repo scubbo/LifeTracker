@@ -12,12 +12,25 @@ import java.util.List;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
 
+    private static DatabaseHelper sInstance;
+
     private static final int DATABASE_VERSION = 1;
     private static final String DATABASE_NAME = "AppHelper";
     private static final String TABLE_CREATE =
             "CREATE TABLE QUESTION_TYPES " +
             "(type varchar(12))";
     private static final String TABLE_POPULATE = buildTablePopulateString();
+
+    public static DatabaseHelper getInstance(Context context) {
+        // Use the application context, which will ensure that you
+        // don't accidentally leak an Activity's context.
+        // See this article for more information: http://bit.ly/6LRzfx
+        // http://www.androiddesignpatterns.com/2012/05/correctly-managing-your-sqlite-database.html
+        if (sInstance == null) {
+            sInstance = new DatabaseHelper(context.getApplicationContext());
+        }
+        return sInstance;
+    }
 
     private static String buildTablePopulateString() {
         StringBuilder sb = new StringBuilder("INSERT INTO QUESTION_TYPES VALUES (");

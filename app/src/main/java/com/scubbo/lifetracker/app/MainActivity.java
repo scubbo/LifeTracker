@@ -4,19 +4,14 @@ import android.support.v4.app.FragmentManager;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.TextView;
-import com.scubbo.lifetracker.app.questions.QuestionType;
-
-import java.util.List;
+import com.scubbo.lifetracker.app.fragments.AddQuestionDetailFragment;
+import com.scubbo.lifetracker.app.fragments.AddQuestionFragment;
+import com.scubbo.lifetracker.app.fragments.MainFragment;
+import com.scubbo.lifetracker.app.fragments.ViewQuestionsFragment;
 
 public class MainActivity extends ActionBarActivity implements View.OnTouchListener {
 
@@ -24,8 +19,6 @@ public class MainActivity extends ActionBarActivity implements View.OnTouchListe
     private static final String ADD_QUESTION_TAG = "add-question-tag";
     private static final String ADD_QUESTION_DETAIL_TAG = "add-question-detail-tag";
     private static final String VIEW_QUESTIONS_TAG = "view-questions-tag";
-
-    private static DatabaseHelper dbHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,8 +30,6 @@ public class MainActivity extends ActionBarActivity implements View.OnTouchListe
                     .add(R.id.container, fg, MAIN_FRAGMENT_TAG)
                     .commit();
         }
-
-        dbHelper = new DatabaseHelper(this);
     }
 
 
@@ -110,87 +101,4 @@ public class MainActivity extends ActionBarActivity implements View.OnTouchListe
         return false;
     }
 
-
-    public static class MainFragment extends Fragment {
-
-        public MainFragment() {
-        }
-
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.fragment_main, container, false);
-
-            TextView v = (TextView) rootView.findViewById(R.id.textView2);
-            TextView v1 = (TextView) rootView.findViewById(R.id.textView3);
-
-            View.OnTouchListener activityAsListener = (View.OnTouchListener) getActivity();
-            v.setOnTouchListener(activityAsListener);
-            v1.setOnTouchListener(activityAsListener);
-
-            return rootView;
-        }
-    }
-
-    public static class AddQuestionFragment extends Fragment {
-        public AddQuestionFragment() {}
-
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.fragment_add_question, container, false);
-
-            TextView v = (TextView) rootView.findViewById(R.id.textViewBoolean);
-
-            View.OnTouchListener activityAsListener = (View.OnTouchListener) getActivity();
-            v.setOnTouchListener(activityAsListener);
-
-            return rootView;
-        }
-    }
-
-    public static class AddQuestionDetailFragment extends Fragment {
-        //TODO: Make this configurable
-        public AddQuestionDetailFragment() {}
-
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                 Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.fragment_add_question_detail, container, false);
-
-            Button button = (Button) rootView.findViewById(R.id.button);
-            button.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    EditText questionText = (EditText) ((View)view.getParent()).findViewById(R.id.editText);
-                    String questionTextValue = questionText.getText().toString();
-                    addQuestion(questionTextValue);
-                    questionText.setText("");
-                }
-            });
-            return rootView;
-        }
-
-        private void addQuestion(String questionText) {
-            dbHelper.addQuestion(QuestionType.BOOLEAN, questionText);
-        }
-    }
-
-    public static class ViewQuestionsFragment extends Fragment {
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                                 Bundle savedInstanceState) {
-            System.out.println("onCreateView for ViewQuestions is being called");
-            View rootView = inflater.inflate(R.layout.fragment_view_questions, container, false);
-
-            LinearLayout layout = (LinearLayout) rootView.findViewById(R.id.linearLayout1);
-            List<String> questionTexts = dbHelper.getQuestionTexts();
-            for (String questionText: questionTexts) {
-                TextView tv = new TextView(getActivity());
-                tv.setText(questionText);
-                layout.addView(tv);
-            }
-            return rootView;
-        }
-    }
 }
