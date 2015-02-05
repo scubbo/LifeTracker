@@ -57,48 +57,35 @@ public class MainActivity extends ActionBarActivity implements View.OnTouchListe
 
     @Override
     public boolean onTouch(View view, MotionEvent motionEvent) {
-        FragmentManager fm = getSupportFragmentManager();
-
         if (view.getId() == R.id.textView2) {
-            //http://stackoverflow.com/questions/4932462/animate-the-transition-between-fragments
-            //http://trickyandroid.com/fragments-translate-animation/
-            Fragment originalFragment = fm.findFragmentByTag(MAIN_FRAGMENT_TAG);
-            fm.beginTransaction()
-                    .setCustomAnimations(R.animator.slide_in_right,
-                            R.animator.slide_out_left,
-                            R.animator.slide_in_left,
-                            R.animator.slide_out_right)
-                        .replace(originalFragment.getId(), Fragment
-                                        .instantiate(this, AddQuestionFragment.class.getName()),
-                                ADD_QUESTION_TAG)
-                    .addToBackStack(null).commit();
-
+            setUpFragmentTransition(MAIN_FRAGMENT_TAG, AddQuestionFragment.class, ADD_QUESTION_TAG);
         }
         if (view.getId() == R.id.textView3) {
-            Fragment originalFragment = fm.findFragmentByTag(MAIN_FRAGMENT_TAG);
-            fm.beginTransaction()
-                    .setCustomAnimations(R.animator.slide_in_right,
-                            R.animator.slide_out_left,
-                            R.animator.slide_in_left,
-                            R.animator.slide_out_right)
-                    .replace(originalFragment.getId(), Fragment
-                                        .instantiate(this, ViewQuestionsFragment.class.getName()),
-                                VIEW_QUESTIONS_TAG)
-                    .addToBackStack(null).commit();
+            setUpFragmentTransition(MAIN_FRAGMENT_TAG, ViewQuestionsFragment.class, VIEW_QUESTIONS_TAG);
         }
         if (view.getId() == R.id.textViewBoolean) {
-            Fragment originalFragment = fm.findFragmentByTag(ADD_QUESTION_TAG);
-            fm.beginTransaction()
-                    .setCustomAnimations(R.animator.slide_in_right,
-                            R.animator.slide_out_left,
-                            R.animator.slide_in_left,
-                            R.animator.slide_out_right)
-                    .replace(originalFragment.getId(), Fragment
-                                    .instantiate(this, AddQuestionDetailFragment.class.getName()),
-                            ADD_QUESTION_DETAIL_TAG)
-                    .addToBackStack(null).commit();
+            setUpFragmentTransition(ADD_QUESTION_TAG, AddQuestionDetailFragment.class, ADD_QUESTION_DETAIL_TAG);
         }
         return false;
+    }
+
+    private void setUpFragmentTransition(String originalFragmentTag,
+                                         Class newFragmentClass,
+                                         String newFragmentTag) {
+        FragmentManager fm = getSupportFragmentManager();
+        Fragment originalFragment = fm.findFragmentByTag(originalFragmentTag);
+
+        //http://stackoverflow.com/questions/4932462/animate-the-transition-between-fragments
+        //http://trickyandroid.com/fragments-translate-animation/
+        fm.beginTransaction()
+                .setCustomAnimations(R.animator.slide_in_right,
+                        R.animator.slide_out_left,
+                        R.animator.slide_in_left,
+                        R.animator.slide_out_right)
+                .replace(originalFragment.getId(), Fragment
+                                .instantiate(this, newFragmentClass.getName()),
+                        newFragmentTag)
+                .addToBackStack(null).commit();
     }
 
 }
