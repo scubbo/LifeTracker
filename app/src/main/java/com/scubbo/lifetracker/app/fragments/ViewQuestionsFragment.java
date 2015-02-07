@@ -27,8 +27,6 @@ public class ViewQuestionsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        DatabaseHelper dbHelper = (DatabaseHelper) getArguments().get("dbHelper");
-
         View rootView = inflater.inflate(R.layout.fragment_view_questions, container, false);
 
         LinearLayout layout = (LinearLayout) rootView.findViewById(R.id.linearLayout1);
