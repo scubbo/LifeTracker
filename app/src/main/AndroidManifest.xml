@@ -4,6 +4,7 @@
           package="com.scubbo.lifetracker.app" >
 
     <uses-sdk
+            android:minSdkVersion="14"
             tools:node="replace" />
 
     <application
