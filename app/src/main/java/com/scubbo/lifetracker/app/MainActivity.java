@@ -10,6 +10,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import com.scubbo.lifetracker.app.fragments.AddQuestionDetailFragment;
 import com.scubbo.lifetracker.app.fragments.AddQuestionFragment;
+import com.scubbo.lifetracker.app.fragments.AskQuestionFragment;
 import com.scubbo.lifetracker.app.fragments.MainFragment;
 import com.scubbo.lifetracker.app.fragments.ViewQuestionsFragment;
 
@@ -19,6 +20,7 @@ public class MainActivity extends ActionBarActivity implements View.OnTouchListe
     private static final String ADD_QUESTION_TAG = "add-question-tag";
     private static final String ADD_QUESTION_DETAIL_TAG = "add-question-detail-tag";
     private static final String VIEW_QUESTIONS_TAG = "view-questions-tag";
+    private static final String ASK_QUESTION_TAG = "ask-question-tag";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,12 +61,19 @@ public class MainActivity extends ActionBarActivity implements View.OnTouchListe
     public boolean onTouch(View view, MotionEvent motionEvent) {
         if (view.getId() == R.id.textView2) {
             setUpFragmentTransition(MAIN_FRAGMENT_TAG, AddQuestionFragment.class, ADD_QUESTION_TAG);
+            return false;
         }
         if (view.getId() == R.id.textView3) {
             setUpFragmentTransition(MAIN_FRAGMENT_TAG, ViewQuestionsFragment.class, VIEW_QUESTIONS_TAG);
+            return false;
         }
         if (view.getId() == R.id.textViewBoolean) {
             setUpFragmentTransition(ADD_QUESTION_TAG, AddQuestionDetailFragment.class, ADD_QUESTION_DETAIL_TAG);
+            return false;
+        }
+        if (view.getId() == R.id.textViewAskQuestion) {
+            setUpFragmentTransition(MAIN_FRAGMENT_TAG, AskQuestionFragment.class, ASK_QUESTION_TAG);
+            return false;
         }
         return false;
     }

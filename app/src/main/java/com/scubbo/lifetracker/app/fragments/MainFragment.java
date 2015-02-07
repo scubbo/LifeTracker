@@ -16,10 +16,12 @@ public class MainFragment extends Fragment {
 
         TextView v = (TextView) rootView.findViewById(R.id.textView2);
         TextView v1 = (TextView) rootView.findViewById(R.id.textView3);
+        TextView v2 = (TextView) rootView.findViewById(R.id.textViewAskQuestion);
 
         View.OnTouchListener activityAsListener = (View.OnTouchListener) getActivity();
         v.setOnTouchListener(activityAsListener);
         v1.setOnTouchListener(activityAsListener);
+        v2.setOnTouchListener(activityAsListener);
 
         return rootView;
     }
