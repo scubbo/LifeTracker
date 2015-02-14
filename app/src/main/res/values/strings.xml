@@ -12,5 +12,6 @@
     <string name="save">Save</string>
     <string name="answer">Answer</string>
     <string name="view_ask_question_title">Ask Question</string>
+    <string name="view_data_tag">viewDataTag</string>
 
 </resources>

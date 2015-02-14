@@ -8,7 +8,10 @@ import com.scubbo.lifetracker.app.questions.QuestionType;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
 
@@ -76,6 +79,19 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return outputList;
     }
 
+    public List<Map<String,String>> getQuestionIdsAndTexts() {
+        List<Map<String,String>> outputList = new ArrayList<Map<String,String>>();
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor c = db.query("QUESTIONS", new String[]{"rowID","text"}, null, null, null, null, null);
+        while(c.moveToNext()) {
+            Map<String, String> map = new HashMap<String, String>();
+            map.put("id", String.valueOf(c.getInt(0)));
+            map.put("text", c.getString(1));
+            outputList.add(map);
+        }
+        return outputList;
+    }
+
     private boolean tableExists(String tableName) {
         SQLiteDatabase db = this.getReadableDatabase();
         StringBuilder sb = new StringBuilder();
@@ -97,6 +113,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     private void addBooleanQuestion(String questionText) {
         //if questions table exists, don't create it
+        //TODO: Extract this to setup
         if (!tableExists("QUESTIONS")) {
             this.getWritableDatabase().execSQL("CREATE TABLE QUESTIONS " +
                             "(type varchar(12), " +
@@ -107,5 +124,40 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         this.getWritableDatabase().execSQL("INSERT INTO QUESTIONS (type, text) VALUES (\"" +
                 QuestionType.BOOLEAN.toString() + "\", \"" + questionText + "\")");
 
+    }
+
+    public void addBooleanAnswer(Integer questionId, Boolean answer, Long dateInMillis) {
+        //TODO: Extract this to setup
+        if (!tableExists("ANSWERS_" + QuestionType.BOOLEAN.toString())) {
+            StringBuilder sb = new StringBuilder();
+            sb.append("CREATE TABLE ANSWERS_" + QuestionType.BOOLEAN.toString() + " ");
+            sb.append("(");
+            sb.append("questionId int,");
+            sb.append("answer int,");
+            sb.append("date int");
+            sb.append(")");
+            this.getWritableDatabase().execSQL(sb.toString());
+        }
+
+        StringBuilder sb = new StringBuilder();
+        sb.append("INSERT INTO ANSWERS_" + QuestionType.BOOLEAN.toString() + " ");
+        sb.append("(questionId, answer, date) ");
+        sb.append("VALUES (" + questionId + "," + (answer ? "1" : "0") + "," + dateInMillis + ")");
+        this.getWritableDatabase().execSQL(sb.toString());
+    }
+
+    public Map<String, String> getQuestionView(Integer questionId) {
+        Map<String, String> returnMap = new HashMap<String, String>();
+
+        StringBuilder sb = new StringBuilder();
+        sb.append("SELECT type, text ");
+        sb.append("FROM QUESTIONS ");
+        sb.append("WHERE rowID=='" + questionId.toString() + "'");
+        Cursor c = this.getReadableDatabase().rawQuery(sb.toString(), null);
+        while (c.moveToNext()) {
+            returnMap.put("type", c.getString(0));
+            returnMap.put("text", c.getString(1));
+        }
+        return returnMap;
     }
 }

@@ -1,8 +1,6 @@
 package com.scubbo.lifetracker.app;
 
-import android.support.v4.app.FragmentManager;
 import android.support.v7.app.ActionBarActivity;
-import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -11,6 +9,7 @@ import android.view.View;
 import com.scubbo.lifetracker.app.fragments.AddQuestionDetailFragment;
 import com.scubbo.lifetracker.app.fragments.AddQuestionFragment;
 import com.scubbo.lifetracker.app.fragments.AskQuestionFragment;
+import com.scubbo.lifetracker.app.fragments.FragmentTransitionHelper;
 import com.scubbo.lifetracker.app.fragments.MainFragment;
 import com.scubbo.lifetracker.app.fragments.ViewQuestionsFragment;
 
@@ -21,6 +20,8 @@ public class MainActivity extends ActionBarActivity implements View.OnTouchListe
     private static final String ADD_QUESTION_DETAIL_TAG = "add-question-detail-tag";
     private static final String VIEW_QUESTIONS_TAG = "view-questions-tag";
     private static final String ASK_QUESTION_TAG = "ask-question-tag";
+
+    private final FragmentTransitionHelper mFragmentTransitionHelper = FragmentTransitionHelper.getInstance(this);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,20 +82,8 @@ public class MainActivity extends ActionBarActivity implements View.OnTouchListe
     private void setUpFragmentTransition(String originalFragmentTag,
                                          Class newFragmentClass,
                                          String newFragmentTag) {
-        FragmentManager fm = getSupportFragmentManager();
-        Fragment originalFragment = fm.findFragmentByTag(originalFragmentTag);
-
-        //http://stackoverflow.com/questions/4932462/animate-the-transition-between-fragments
-        //http://trickyandroid.com/fragments-translate-animation/
-        fm.beginTransaction()
-                .setCustomAnimations(R.animator.slide_in_right,
-                        R.animator.slide_out_left,
-                        R.animator.slide_in_left,
-                        R.animator.slide_out_right)
-                .replace(originalFragment.getId(), Fragment
-                                .instantiate(this, newFragmentClass.getName()),
-                        newFragmentTag)
-                .addToBackStack(null).commit();
+        //TODO: Replace this with direct calls
+        mFragmentTransitionHelper.setUpFragmentTransition(this, originalFragmentTag, newFragmentClass, newFragmentTag);
     }
 
 }
