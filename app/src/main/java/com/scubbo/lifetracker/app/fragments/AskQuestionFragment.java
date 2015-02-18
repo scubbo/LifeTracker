@@ -11,7 +11,7 @@ import android.widget.Button;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
-import com.scubbo.lifetracker.app.DatabaseHelper;
+import com.scubbo.lifetracker.app.storage.DatabaseHelper;
 import com.scubbo.lifetracker.app.R;
 
 import java.util.Calendar;

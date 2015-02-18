@@ -10,7 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import com.scubbo.lifetracker.app.DatabaseHelper;
+import com.scubbo.lifetracker.app.storage.DatabaseHelper;
 import com.scubbo.lifetracker.app.R;
 
 import java.util.HashMap;

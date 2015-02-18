@@ -4,7 +4,7 @@
           package="com.scubbo.lifetracker.app" >
 
     <uses-sdk
-            android:minSdkVersion="14"
+            android:minSdkVersion="16"
             tools:node="replace" />
 
     <application
@@ -21,6 +21,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <service android:enabled="true" android:name="com.scubbo.lifetracker.app.background.BackgroundService" />
     </application>
+
 
 </manifest>

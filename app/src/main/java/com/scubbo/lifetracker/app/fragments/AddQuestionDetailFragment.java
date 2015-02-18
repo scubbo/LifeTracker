@@ -8,7 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import com.scubbo.lifetracker.app.DatabaseHelper;
+import com.scubbo.lifetracker.app.storage.DatabaseHelper;
 import com.scubbo.lifetracker.app.R;
 import com.scubbo.lifetracker.app.questions.QuestionType;
 

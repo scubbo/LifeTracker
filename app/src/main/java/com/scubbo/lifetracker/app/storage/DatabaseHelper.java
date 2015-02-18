@@ -1,4 +1,4 @@
-package com.scubbo.lifetracker.app;
+package com.scubbo.lifetracker.app.storage;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -8,7 +8,6 @@ import com.scubbo.lifetracker.app.questions.QuestionType;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
