@@ -35,8 +35,11 @@ public class AskQuestionFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        mQuestionId = getArguments().getInt("questionId");
+        if (mQuestionId == null) {
+            mQuestionId = getArguments().getInt("questionId");
+        }
 
+        //Should do a null check here
         Map<String, String> questionView = dbHelper.getQuestionView(mQuestionId);
 
         View rootView = inflater.inflate(R.layout.fragment_ask_question, container, false);
@@ -56,6 +59,10 @@ public class AskQuestionFragment extends Fragment {
             }
         });
         return rootView;
+    }
+
+    public void setQuestionId(Integer questionId) {
+        mQuestionId = questionId;
     }
 
 }

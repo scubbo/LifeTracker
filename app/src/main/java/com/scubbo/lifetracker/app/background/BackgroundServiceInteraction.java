@@ -13,7 +13,6 @@ public class BackgroundServiceInteraction {
 
     private Activity mActivity;
     private BackgroundService mBoundService;
-    private Boolean mIsBound;
 
     public BackgroundServiceInteraction(Activity activity) {
         mActivity = activity;
@@ -27,11 +26,6 @@ public class BackgroundServiceInteraction {
             // service that we know is running in our own process, we can
             // cast its IBinder to a concrete class and directly access it.
             mBoundService = ((BackgroundService.LocalBinder)service).getService();
-            System.out.println("Doing work now");
-            ((BackgroundService.LocalBinder) service).beginToDoWork();
-            // Tell the user about this for our demo.
-//            Toast.makeText(mActivity, R.string.local_service_connected,
-//                    Toast.LENGTH_SHORT).show();
         }
 
         public void onServiceDisconnected(ComponentName className) {
@@ -40,8 +34,6 @@ public class BackgroundServiceInteraction {
             // Because it is running in our same process, we should never
             // see this happen.
             mBoundService = null;
-//            Toast.makeText(mActivity, R.string.local_service_disconnected,
-//                    Toast.LENGTH_SHORT).show();
         }
     };
 
@@ -50,25 +42,16 @@ public class BackgroundServiceInteraction {
         // class name because we want a specific service implementation that
         // we know will be running in our own process (and thus won't be
         // supporting component replacement by other applications).
-        Toast.makeText(mActivity, "Starting it",
-                Toast.LENGTH_SHORT).show();
-        Context ctx = mActivity.getApplicationContext();
         Intent intent = new Intent(mActivity,
                 BackgroundService.class);
 //        ctx.bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
-        ctx.startService(intent);
-        mIsBound = true;
+        mActivity.getApplicationContext().startService(intent);
     }
 
     public void stopIt() {
-        Toast.makeText(mActivity, "Stopping it",
-                Toast.LENGTH_SHORT).show();
-//        if (mIsBound) {
             // Detach our existing connection.
             Intent intent = new Intent(mActivity, BackgroundService.class);
             mActivity.getApplicationContext().stopService(intent);
-            mIsBound = false;
-//        }
     }
 
 }
